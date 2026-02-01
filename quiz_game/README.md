@@ -19,9 +19,13 @@ This project is built for **educational purposes** as part of the Network Progra
 
 ## Project Structure
 quiz_game/
+
 │── server.c # Server program
+
 │── client.c # Client program
+
 │── questions.txt # Optional: quiz questions
+
 │── README.md # This file
 
 
