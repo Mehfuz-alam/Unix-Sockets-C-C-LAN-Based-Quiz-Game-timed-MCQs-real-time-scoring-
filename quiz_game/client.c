@@ -1,3 +1,4 @@
+// client.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,32 +6,61 @@
 #include <arpa/inet.h>
 
 #define PORT 8080
+#define BUFFER_SIZE 512
 
-int main() {
+void error_exit(const char *msg)
+{
+    perror(msg);
+    exit(EXIT_FAILURE);
+}
+
+int main()
+{
     int sock;
     struct sockaddr_in server;
-    char buffer[512];
+    char buffer[BUFFER_SIZE];
     char answer;
 
-    sock = socket(AF_INET, SOCK_STREAM, 0);
+    sock=socket(AF_INET,SOCK_STREAM,0);
 
-    server.sin_family = AF_INET;
-    server.sin_port = htons(PORT);
-    inet_pton(AF_INET, "127.0.0.1", &server.sin_addr); // same Codespace
+    if(sock<0)
+        error_exit("Socket failed");
 
-    connect(sock, (struct sockaddr *)&server, sizeof(server));
+    server.sin_family=AF_INET;
+    server.sin_port=htons(PORT);
 
-    recv(sock, buffer, sizeof(buffer), 0);
-    printf("%s", buffer);
+    if(inet_pton(AF_INET,"127.0.0.1",&server.sin_addr)<=0)
+        error_exit("Invalid address");
 
-    printf("Your answer (A/B/C/D): ");
-    scanf(" %c", &answer);
+    if(connect(sock,(struct sockaddr*)&server,sizeof(server))<0)
+        error_exit("Connection failed");
 
-    send(sock, &answer, 1, 0);
+    printf("Connected to Quiz Server\n");
 
-    recv(sock, buffer, sizeof(buffer), 0);
-    printf("%s", buffer);
+    while(1)
+    {
+        int bytes=recv(sock,buffer,BUFFER_SIZE-1,0);
+
+        if(bytes<=0)
+            break;
+
+        buffer[bytes]='\0';
+
+        printf("\n%s\n",buffer);
+
+        /* Check if question */
+        if(strstr(buffer,"A)")!=NULL)
+        {
+            printf("Enter answer: ");
+            scanf(" %c",&answer);
+
+            send(sock,&answer,1,0);
+        }
+    }
+
+    printf("Disconnected from server\n");
 
     close(sock);
+
     return 0;
 }
