@@ -3,7 +3,7 @@
 ## Overview
 This project implements a **LAN-based quiz game** using **Unix sockets in C**. It demonstrates core networking concepts including **TCP sockets**, **I/O multiplexing with `select()`**, **server-side timers**, and **real-time scoring**. Multiple clients can connect simultaneously, receive timed multiple-choice questions (MCQs), and see a real-time leaderboard after the timer expires.
 
-This project is built for **educational purposes** as part of the Network Programming course at [Your Institution], Nepal.
+This project is built for **educational purposes** as part of the Network Programming course at Nepal College of Information Technology, Nepal.
 
 ---
 
